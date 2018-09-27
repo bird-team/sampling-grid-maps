@@ -155,10 +155,11 @@ result <- plyr::llply(process_indices, .parallel = is_parallel,
   if (nrow(l) > 0) {
     p <- p + ggplot2::geom_point(ggplot2::aes(x = x, y = y),
                                  data = l, color = "white") +
-             ggrepel::geom_text_repel(ggplot2::aes(x = x, y = y, label = text),
-                                      data = l, color = "white",
-                                      max.iter = 10000,
-                                      seed = 500, force = 10)
+             ggrepel::geom_label_repel(ggplot2::aes(x = x, y = y, label = text),
+                                       data = l, color = "white",
+                                       max.iter = 10000,
+                                       fill = scales::alpha("black", 0.4),
+                                       seed = 500, force = 10)
   }
   #### save map
   ggplot2::ggsave(paste0("exports/grid-", grid_data$id[i], ".png"), p,
