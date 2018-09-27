@@ -2,8 +2,8 @@ threads: 1                                             # number of threads to us
 number_of_grid_cells: 5                                # maximum number of grid cells for which to produce images
 
 maps:
-  width: 6.5                                           # map width in inches
-  height: 6.5                                          # map height in inches
+  width: 4.5                                           # map width in inches
+  height: 4.5                                          # map height in inches
   google_zoom_level: 15                                # zoom-level for google map background
   google_map_type: "satellite"                         # type of map to use for google map background
 
