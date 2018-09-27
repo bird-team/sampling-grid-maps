@@ -1,6 +1,6 @@
 # Initialization
 ## set default options
-options(stringsAsFactors = FALSE, download.file.method = "curl")
+options(stringsAsFactors = FALSE)
 
 ## load functions
 source("code/extract_locations_from_ebird_records.R")
@@ -97,7 +97,12 @@ if (is_parallel) {
 }
 
 ## create maps
-result <- plyr::llply(seq_len(nrow(grid_data)), .parallel = is_parallel,
+if (identical(parameters$number_of_grid_cells, "all")) {
+  process_indices <- seq_len(nrow(grid_data))
+} else {
+  process_indices <- seq_len(parameters$number_of_grid_cells)
+}
+result <- plyr::llply(process_indices, .parallel = is_parallel,
                       function(i) {
   ### find extent of grid_cell
   curr_extent <- raster::extent(as(grid_wgs1984_data[i, ], "Spatial"))
@@ -120,11 +125,13 @@ result <- plyr::llply(seq_len(nrow(grid_data)), .parallel = is_parallel,
         dplyr::rename(x = long, y = lat)
   ### prepare text for plotting
   l <- locations_wgs1984_data %>%
-       filter(rowSums(as.matrix(sf::st_intersects(
-         locations_data, grid_data[neighboring_indices, ]))) > 0) %>%
-       as("Spatial") %>%
-       as.data.frame() %>%
-       dplyr::rename(x = coords.x1, y = coords.x2)
+       filter(c(as.matrix(sf::st_intersects(
+         locations_data, grid_data[i, ]))))
+  if (nrow(l) > 0)
+    l <- l %>%
+         as("Spatial") %>%
+         as.data.frame() %>%
+         dplyr::rename(x = coords.x1, y = coords.x2)
   ### download background of grid cell
   bg <- ggmap::get_googlemap(center = curr_wgs1984_centroid,
                              zoom = parameters$maps$google_zoom_level,
@@ -142,11 +149,17 @@ result <- plyr::llply(seq_len(nrow(grid_data)), .parallel = is_parallel,
   p <- ggmap::ggmap(bg, extent = "normal", maprange = FALSE) +
        ggplot2::geom_polygon(ggplot2::aes(x = x, y = y, group = id),
                              data = pl, color = "red", fill = NA) +
-       ggrepel::geom_text_repel(ggplot2::aes(x = x, y = y, label = text),
-                                data = l, color = "white",
-                                 seed = 500, force = 100) +
        ggplot2::coord_cartesian(xlim = curr_xlim, ylim = curr_ylim) +
        ggmap::theme_nothing()
+  ### add labels
+  if (nrow(l) > 0) {
+    p <- p + ggplot2::geom_point(ggplot2::aes(x = x, y = y),
+                                 data = l, color = "white") +
+             ggrepel::geom_text_repel(ggplot2::aes(x = x, y = y, label = text),
+                                      data = l, color = "white",
+                                      max.iter = 10000,
+                                      seed = 500, force = 10)
+  }
   #### save map
   ggplot2::ggsave(paste0("exports/grid-", grid_data$id[i], ".png"), p,
                   width = parameters$maps$width,
