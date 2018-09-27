@@ -24,4 +24,4 @@ piggyback::pb_upload("maps.zip",
                      repo =  "bird-team/sampling-grid-maps",
                      name = "maps.zip",
                      overwrite = TRUE,
-                     tag = "v.0.0.1")
+                     tag = "v0.0.1")

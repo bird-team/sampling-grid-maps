@@ -17,13 +17,13 @@ maps: data/parameters/parameters.yml code/create_maps.R data/grid/grid.shp code/
 	@docker stop -t 1 bba || true && docker rm bba || true
 
 # command for pushing maps
-push_maps: exports/*.png push_maps.R
+push_maps: exports/*.png code/push_maps.R
 	@docker run --name=bba -w /tmp -dt 'brisbanebirdteam/build-env:latest' \
 	&& docker cp . bba:/tmp/ \
 	&& docker cp "$(HOME)/.Renviron" bba:/root/.Renviron \
 	&& docker exec bba sh -c "zip -r maps.zip exports" \
 	&& docker exec bba sh -c "Rscript /tmp/code/push_maps.R" \
-	&& docker exec bba sh -c "rm assets/maps.zip" || true
+	&& docker exec bba sh -c "rm maps.zip" || true
 	@docker stop -t 1 bba || true && docker rm bba || true
 
 # docker container commands
