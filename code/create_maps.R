@@ -148,7 +148,7 @@ result <- plyr::llply(process_indices, .parallel = is_parallel,
   ### create map
   p <- ggmap::ggmap(bg, extent = "normal", maprange = FALSE) +
        ggplot2::geom_polygon(ggplot2::aes(x = x, y = y, group = id),
-                             data = pl, color = "red", fill = NA) +
+                             data = pl, color = "white", fill = NA) +
        ggplot2::coord_cartesian(xlim = curr_xlim, ylim = curr_ylim) +
        ggmap::theme_nothing()
   ### add labels
@@ -157,6 +157,7 @@ result <- plyr::llply(process_indices, .parallel = is_parallel,
                                  data = l, color = "white") +
              ggrepel::geom_label_repel(ggplot2::aes(x = x, y = y, label = text),
                                        data = l, color = "white",
+                                       size = 2.5, label.size = 0,
                                        max.iter = 10000,
                                        fill = scales::alpha("black", 0.4),
                                        seed = 500, force = 10)
