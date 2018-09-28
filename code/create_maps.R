@@ -153,14 +153,15 @@ result <- plyr::llply(process_indices, .parallel = is_parallel,
        ggmap::theme_nothing()
   ### add labels
   if (nrow(l) > 0) {
-    p <- p + ggplot2::geom_point(ggplot2::aes(x = x, y = y),
+    p <- p + ggplot2::geom_point(ggplot2::aes(x = x, y = y, shape = type),
                                  data = l, color = "white") +
              ggrepel::geom_label_repel(ggplot2::aes(x = x, y = y, label = text),
                                        data = l, color = "white",
                                        size = 2.5, label.size = 0,
-                                       max.iter = 10000,
+                                       label.padding = 0.1, max.iter = 10000,
                                        fill = scales::alpha("black", 0.4),
-                                       seed = 500, force = 10)
+                                       seed = 500, force = 10) +
+             ggplot2::scale_shape_manual(values = c("H" = 17, "P" = 19))
   }
   #### save map
   ggplot2::ggsave(paste0("exports/grid-", grid_data$id[i], ".png"), p,

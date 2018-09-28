@@ -40,7 +40,8 @@ extract_locations_from_ebird_records <- function(x, id_column_name,
        dplyr::filter(nchar(name) > 0)
 
   # add in column with formatted text
-  x$text <- paste0(x$name, " (", x$type, ")")
+  # this is provided in case this needs to change in the future
+  x$text <- x$name
 
   # convert data.frame to sf
   x <- sf::st_as_sf(x, coords = c("longitude", "latitude"), crs = 4326,
