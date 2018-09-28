@@ -92,7 +92,11 @@ if (is_parallel) {
   cl <- parallel::makeCluster(parameters$threads, type = "PSOCK")
   parallel::clusterEvalQ(cl, {library(dplyr); library(sf)})
   parallel::clusterExport(cl, envir = environment(),
-                           c("grid_data", "parameters", "grid_wgs1984_data"))
+                           c("grid_data", "parameters", "grid_wgs1984_data",
+                             "grid_resolution", "grid_centroid_data",
+                             "grid_wgs1984_centroid_data",
+                             "locations_data",
+                             "locations_wgs1984_data"))
   doParallel::registerDoParallel(cl)
 }
 
