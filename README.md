@@ -1,7 +1,4 @@
-# Sampling grid maps
+# Notice
 
-This repository contains the code and data for producing maps for the sampling sheets used by the [Atlas of the Birds of Brisbane](https://brisbanebirds.com).
+This repository has been deprecated. It contains code and data that were initially used to produce maps for surveyor sheets for the [Atlas of the Birds of Brisbane](https://brisbanebirds.com). However, this functionality has since been merged into the [main atlas repository](https://github.com/bird-team/brisbane-bird-atlas) to reduce the number and complexity of steps involved when updating the atlas with new eBird data (per bird-team/brisbane-bird-atlas@7855b6235a49d7c952a1da2594f9f33171e63d71). This repository remains online to serve as a reference. It is no longer used at all in the atlas workflow and is no longer supported.
 
-## Usage
-
-To create the maps locally, execute the command `make maps` in the terminal and they will appear in the _exports_ directory. The appearance of these maps can be customized by changing the parameters in the _data/parameters/parameters.yml_ file. Finally, locally produced maps can be uploaded to the repository using the command `make push_maps`. For convenience, the command `make all` can be used to create the maps and upload them to the repository.
